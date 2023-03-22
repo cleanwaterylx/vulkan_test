@@ -3,7 +3,7 @@ project(vulkan VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
 
 set(GLFW3_INCLUDE_DIR D:/opengl/glfw-3.3.8/include)
-set(GLFW_LIB D:/glfw-3.3.8/build/src/Debug/glfw3.lib)
+set(GLFW_LIB D:/opengl/glfw-3.3.8/build/src/Debug/glfw3.lib)
 set(VULKAN_LIB D:/vulkan/Lib/vulkan-1.lib)
 set(VULKAN_INCLUDE D:/vulkan/Include)
 
