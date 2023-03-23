@@ -82,6 +82,8 @@ private:
     void initVulkan();
     void mainLoop();
     void cleanUp();
+    void cleanupSwapChain();
+    void recreateSwapChain();
     void drawFrame();
     void createInstace();
     void createSurface();
@@ -114,6 +116,7 @@ private:
         const VkDebugUtilsMessengerCallbackDataEXT *pCallbackData,
         void *pUserData);
     static std::vector<char> readFile(const std::string &filename);
+    static void onWindowResized(GLFWwindow* window, int width, int height);
 public:
     void run();
 };
