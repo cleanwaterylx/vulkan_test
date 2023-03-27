@@ -1,5 +1,4 @@
 #include "HelloTriangleApplication.hpp"
-
 #include <iostream>
 
 int main()
