@@ -25,6 +25,7 @@ void HelloTriangleApplication::initVulkan()
     createGraphicsPipeline();
     createFramebuffers();
     createCommandPool();
+    createTextureImage();
     createVertexBuffer();
     createIndexBuffer();
     createUniformBuffer();
@@ -466,6 +467,10 @@ void HelloTriangleApplication::createCommandBuffers()
             throw std::runtime_error("failed to record command buffer!");
         }
     }
+}
+
+void HelloTriangleApplication::createTextureImage()
+{
 }
 
 void HelloTriangleApplication::createVertexBuffer()
