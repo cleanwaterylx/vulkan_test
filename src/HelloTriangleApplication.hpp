@@ -125,14 +125,19 @@ private:
     VkExtent2D swapChainExtent;
     std::vector<VkImageView> swapChainImageViews;
     std::vector<VkFramebuffer> swapChainFramebuffers;
+
     VkRenderPass renderPass;
     VkDescriptorSetLayout descriptorSetLayout;
     VkPipelineLayout pipelineLayout;
     VkPipeline graphicsPipeline;
+
     VkCommandPool commandPool;
     std::vector<VkCommandBuffer> commandBuffers;
+
     VkImage textureImage;
     VkDeviceMemory textureImageMemory;
+    VkImageView textureImageView;
+    VkSampler textureSampler;
     VkBuffer vertexBuffer;
     VkDeviceMemory vertexBufferMemory;
     VkBuffer indexBuffer;
@@ -141,6 +146,7 @@ private:
     VkDeviceMemory uniformBufferMemory;
     VkDescriptorPool descriptorPool;
     VkDescriptorSet descriptorSet;
+
     VkSemaphore imageAvailableSemaphore;
     VkSemaphore renderFinishedSemaphore;
 
@@ -157,6 +163,7 @@ private:
     void createLogicalDevice();
     void createSwapChain();
     void createImageViews();
+    VkImageView createImageView(VkImage image, VkFormat format);
     void createRenderPass();
     void createDescriptorSetLayout();
     void createGraphicsPipeline();
@@ -167,6 +174,8 @@ private:
     void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& imageMemory);
     void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
     void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
+    void createTextureImageView();
+    void createTextureSampler();
     void createVertexBuffer();
     void createIndexBuffer();
     void createUniformBuffer();
