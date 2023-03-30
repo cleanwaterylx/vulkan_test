@@ -6,11 +6,13 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/hash.hpp>
 #include <stdexcept>
 #include <vector>
 #include <algorithm>
 #include <set>
 #include <array>
+#include <unordered_map>
 #include <iostream>
 #include <optional>
 #include <fstream>
@@ -65,7 +67,24 @@ struct Vertex
 
         return attributeDescriptions;
     }
+
+    bool operator==(const Vertex &other) const
+    {
+        return pos == other.pos && color == other.color && texCoord == other.texCoord;
+    }
 };
+
+namespace std
+{
+    template <>
+    struct hash<Vertex>
+    {
+        size_t operator()(Vertex const &vertex) const
+        {
+            return ((hash<glm::vec3>()(vertex.pos) ^ (hash<glm::vec3>()(vertex.color) << 1)) >> 1) ^ (hash<glm::vec2>()(vertex.texCoord) << 1);
+        }
+    };
+}
 
 struct UniformBufferObject
 {
@@ -73,22 +92,6 @@ struct UniformBufferObject
     glm::mat4 view;
     glm::mat4 proj;
 };
-
-const std::vector<Vertex> vertices = {
-    {{-0.5f, -0.5f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-    {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-    {{0.5f, 0.5f, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-    {{-0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}},
-
-    {{-0.5f, -0.5f, -0.5f}, {1.0f, 0.0f, 0.0f}, {0.0f, 0.0f}},
-    {{0.5f, -0.5f, -0.5f}, {0.0f, 1.0f, 0.0f}, {1.0f, 0.0f}},
-    {{0.5f, 0.5f, -0.5f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
-    {{-0.5f, 0.5f, -0.5f}, {1.0f, 1.0f, 1.0f}, {0.0f, 1.0f}}};
-
-const std::vector<uint16_t> indices =
-    {
-        0, 1, 2, 2, 3, 0,
-    4, 5, 6, 6, 7, 4};
 
 struct QueueFamilyIndices
 {
@@ -118,12 +121,14 @@ void DestroyDebugUtilsMessengerEXT(
     VkDebugUtilsMessengerEXT debugMessenger,
     const VkAllocationCallbacks *pAllocator);
 
+const int WIDTH = 800;
+const int HEIGHT = 600;
+const std::string MODEL_PATH = "../model/chalet.obj";
+const std::string TEXTURE_PATH = "../textures/chalet.jpg";
+
 class HelloTriangleApplication
 {
 private:
-    const int WIDTH = 800;
-    const int HEIGHT = 600;
-
     GLFWwindow *window;
     VkInstance instance;
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
@@ -168,7 +173,11 @@ private:
     VkSemaphore imageAvailableSemaphore;
     VkSemaphore renderFinishedSemaphore;
 
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+
     void initWindow();
+    void loadModel();
     void initVulkan();
     void mainLoop();
     void cleanUp();
@@ -189,7 +198,7 @@ private:
     void createCommandPool();
     void createCommandBuffers();
     void createDepthResources();
-    VkFormat findSupportedFormat(const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+    VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
     VkFormat findDepthFormat();
     bool hasStencilComponent(VkFormat format);
     void createTextureImage();
