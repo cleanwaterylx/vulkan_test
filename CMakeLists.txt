@@ -1,20 +1,21 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.20)
 project(vulkan VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
 
-set(GLFW3_INCLUDE_DIR D:/opengl/glfw-3.3.8/include)
-set(GLFW_LIB D:/opengl/glfw-3.3.8/build/src/Debug/glfw3.lib)
-set(VULKAN_LIB D:/vulkan/Lib/vulkan-1.lib)
-set(VULKAN_INCLUDE D:/vulkan/Include)
+# set(CMAKE_BUILD_TYPE "Debug")
+set(CMAKE_BINARY_DIR)
+
+set(THIRD_PARTY_DIR ${CMAKE_SOURCE_DIR}/3d-party)
+set(Vulkan_LIBRARY ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32/vulkan-1.lib)
+set(Vulkan_INCLUDE_DIRS ${THIRD_PARTY_DIR}/VulkanSDK/include)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
 
 include_directories(
-    ${GLFW3_INCLUDE_DIR}
-    ${GLAD_INCLUDE_DIR}
-    ${GLW_INCLUDE_DIR}
-    ${VULKAN_INCLUDE}
+    ${Vulkan_INCLUDE_DIRS}
 )
+
+add_subdirectory(3d-party)
 
 file(GLOB SOURCES ${CMAKE_SOURCE_DIR}/src/*.cpp)
 file(GLOB HEADERS ${CMAKE_SOURCE_DIR}/src/*.hpp)
@@ -27,6 +28,7 @@ add_executable(
 
 target_link_libraries(
     ${PROJECT_NAME}
-    ${GLFW_LIB}
-    ${VULKAN_LIB}
+    glfw
+    glm
+    ${Vulkan_LIBRARY}
 )
